@@ -1,0 +1,23 @@
+.pageTitle{
+    font-weight: bold;
+    font-size: 40px;
+    text-align: center;
+}
+
+table{
+    border: solid 1px;
+    margin: auto;
+    width:80vw;
+}
+
+
+td{
+    border: solid 1px;
+    text-align: center;
+    max-width: 40vh;
+    min-width: 40vh;
+}
+
+td.Services{
+    min-width: 80vw;
+}
