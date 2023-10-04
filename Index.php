@@ -95,9 +95,6 @@ else
     }
     if (isset($_GET["IdUser"]))
     {
-
-        echo "Choisi!!!";
-
         $resultatuser = $connect->prepare("SELECT * FROM utilisateurs WHERE utilisateurs.ID_User = ".$_GET["IdUser"]);
         $resultatuser->execute();
         $row = $resultatuser->fetch(PDO::FETCH_NUM);

@@ -18,9 +18,9 @@
 
     try 
     {
-        $conn = new PDO("mysql:host=$servername;dbname=$database", $username, $password);
+        $connect = new PDO("mysql:host=$servername;dbname=$database", $username, $password);
         // set the PDO error mode to exception
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         echo "Connexion réussie YOUHOUUUUUUU !! ";
     }
     catch(PDOException $e) 
@@ -38,10 +38,25 @@
         echo "ECHEC de la récupération de votre identifiant.";
     }
 
-    $NbConsultationsReq = $conn->prepare("SELECT COUNT(ID_User) FROM consulter WHERE consulter.ID_User = $ID");
-    $NbRecettesReq = $conn->prepare("SELECT COUNT(ID_User) FROM recettes WHERE recettes.ID_User = 6");
-    $NbConsultations = $NbConsultationsReq->execute();
-    $NbRecettes = $NbRecettesReq->execute();
+    {
+        //Récupération du nombre de consultations
+        $NbConsultationsReq = $connect->prepare("SELECT COUNT(ID_User) FROM consulter WHERE consulter.ID_User = ".$ID);
+        $NbConsultationsReq->execute();
+        $row = $NbConsultationsReq->fetch(PDO::FETCH_NUM);
+        $NbConsultations = $row[0];
+
+        //Récupération du nombre de recettes crées
+        $NbRecettesReq = $connect->prepare("SELECT COUNT(ID_User) FROM recettes WHERE recettes.ID_User = $ID");
+        $NbRecettesReq->execute();
+        $row = $NbRecettesReq->fetch(PDO::FETCH_NUM);
+        $NbRecettes = $row[0];   
+        
+        //Récupération de la date d'expiration d'abonnement
+        $ExpirDateReq = $connect->prepare("SELECT Date_abo + interval 1 year FROM utilisateurs WHERE ID_User= ".$ID);
+        $ExpirDateReq->execute();
+        $row = $ExpirDateReq->fetch(PDO::FETCH_NUM);
+        $ExpirDate = $row[0];
+
     ?>
 
     <div class="pageTitle">
@@ -65,9 +80,9 @@
 
                         if ($_SESSION["Statut"] == "VIP")
                         {
-                            $ExpirDateReq = $conn->prepare();
-                            echo "<br><p>Votre abonnement expire le ";
+                            echo "<br><p>Votre abonnement expire le " .$ExpirDate;
                         }
+    }
                         ?>
                     </p>
                 </div>
