@@ -29,10 +29,19 @@
     }
 
     //Récupération de l'ID_User ?
-    if (isset($_SESSIO))
-    $ID = $_SESSION['Id_User'];
+    if (isset($_SESSION['Id_User']))
+    {
+        $ID = $_SESSION['Id_User'];
+    }
+    else
+    {
+        echo "ECHEC de la récupération de votre identifiant.";
+    }
 
-    $UserStatut = $conn->prepare("SELECT utilisateurs.Statut FROM utilisateurs WHERE utilisateurs.USER_ID = $ID");
+    $NbConsultationsReq = $conn->prepare("SELECT COUNT(ID_User) FROM consulter WHERE consulter.ID_User = $ID");
+    $NbRecettesReq = $conn->prepare("SELECT COUNT(ID_User) FROM recettes WHERE recettes.ID_User = 6");
+    $NbConsultations = $NbConsultationsReq->execute();
+    $NbRecettes = $NbRecettesReq->execute();
     ?>
 
     <div class="pageTitle">
@@ -43,16 +52,30 @@
             <td>
                 <div class="Vous">
                     <p>
-                        Vous
+                        <h2>Vous</h2>
                         <br>
                         <!--INSERER LES LIGNES ICI-->
+                        <?php echo "<p>Bonjour ". $_SESSION["Username"] ." !</p>"; ?>
+                        <br>
+                        <?php echo "<p>Vous êtes un utilisateur : ". $_SESSION["Statut"] ."</p>"; ?> 
+                        <br>
+                        <?php echo "<p>Vous avez consulté ". $NbConsultations. " recettes</p>"; ?>
+                        <br>
+                        <?php echo "<p>Vous avez créé ". $NbRecettes ." recettes</p>";
+
+                        if ($_SESSION["Statut"] == "VIP")
+                        {
+                            $ExpirDateReq = $conn->prepare();
+                            echo "<br><p>Votre abonnement expire le ";
+                        }
+                        ?>
                     </p>
                 </div>
             </td>
             <td>
                 <div class="News">
                     <p>
-                        News
+                        <h2>News</h2>
                         <br>
                         <!--INSERER LES LIGNES ICI-->                        
                     </p>
@@ -66,7 +89,7 @@
             <td>
                 <div class="Services">
                     <p>
-                        Services
+                        <h2>Services</h2>
                         <!--INSERER LES LIGNES ICI-->
                     </p>
                 </div>
