@@ -11,9 +11,6 @@
 <body>
 
     <?php
-
-    session_start();
-
     $servername = "localhost";
     $username = "root";
     $password = "";
@@ -36,7 +33,6 @@
     // On récupère tous les status disponibles dans la base (ici, Standard, VIP et Chef)
     $resultat = $connect->prepare("SELECT DISTINCT utilisateurs.Statut, utilisateurs.Statut FROM utilisateurs WHERE utilisateurs.Statut IS NOT NULL");
     $resultat->execute();
-    
     if (!$resultat) 
     {
         echo "<BR>Impossible de consulter les différents types de status" . $status . " <BR>";
@@ -54,15 +50,16 @@
 
     echo "</SELECT>    <p><input type=\"submit\" value=\"Valider le choix\"></p></form>";
 
+
     if(empty($_POST))         
     // Tant que l'on a pas valider
     {
         // rien
     }
-else             // DANS QUEL CAS ?
-    // Lorsque l'on valide
-{
-    if ($_POST['Statut']>=0 /*&& empty($_CHOICE)*/) 
+    
+else            
+    
+    // if ($_POST['Statut']>=0) 
     {
 
         if ($_POST['Statut']=="User")
@@ -96,17 +93,24 @@ else             // DANS QUEL CAS ?
     
         echo "</SELECT>    <p><input type=\"submit\" value=\"Valider le choix\"></p></form>";
     }
-    else
+    if (isset($_GET["IdUser"]))
     {
-        // $resultatuser = $connect->prepare("SELECT * FROM utilisateurs WHERE utilisateurs.ID_User = ".$_CHOICE['IdUser']);
-        // $resultatuser->execute();
-        // $row = $resultat2->fetch(PDO::FETCH_NUM)
-        // $_SESSION["Id_User"]=$row["Id_User"];
-        // $_SESSION["Username"]=$row["Username"];
-        // $_SESSION["Statut"]=$row["Statut"];
-        // $_SESSION["Date_abo"]=$row["Date_abo"];
+
+        echo "Choisi!!!";
+
+        $resultatuser = $connect->prepare("SELECT * FROM utilisateurs WHERE utilisateurs.ID_User = ".$_GET["IdUser"]);
+        $resultatuser->execute();
+        $row = $resultatuser->fetch(PDO::FETCH_NUM);
+
+        session_start();
+        $_SESSION["Id_User"]=$row[0];
+        $_SESSION["Username"]=$row[1];
+        $_SESSION["Statut"]=$row[2];
+        $_SESSION["Date_abo"]=$row[3];
+
+        echo "Vous êtes ".$_SESSION["Username"]." ayant l'id ".$_SESSION["Id_User"]. ". Vous êtes un ". $_SESSION["Statut"]. " et votre abonnement a commencé le ". $_SESSION["Date_abo"];
+        echo "<br><a href=\"accueil.php\">Accéder au site</a>";
     }
-}
 ?>
 
 </html>
