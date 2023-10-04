@@ -12,6 +12,8 @@
 
     <?php
 
+    session_start();
+
     $servername = "localhost";
     $username = "root";
     $password = "";
@@ -60,8 +62,21 @@
 else             // DANS QUEL CAS ?
     // Lorsque l'on valide
 {
-    if ($_POST['Statut']>=0 /*&& empty($_CHOICE)*/) {
-        $resultat2 = $connect->prepare("SELECT DISTINCT utilisateurs.ID_User, utilisateurs.Username FROM utilisateurs WHERE utilisateurs.Statut = ".$_POST['Statut']);
+    if ($_POST['Statut']>=0 /*&& empty($_CHOICE)*/) 
+    {
+
+        if ($_POST['Statut']=="User")
+        {
+            $resultat2 = $connect->prepare("SELECT DISTINCT utilisateurs.ID_User, utilisateurs.Username FROM utilisateurs WHERE utilisateurs.Statut = 'User'");
+        }
+        else     if ($_POST['Statut']=="Chef")
+        {
+            $resultat2 = $connect->prepare("SELECT DISTINCT utilisateurs.ID_User, utilisateurs.Username FROM utilisateurs WHERE utilisateurs.Statut = 'Chef'");
+        }
+        else  if ($_POST['Statut']=="VIP")
+        {
+            $resultat2 = $connect->prepare("SELECT DISTINCT utilisateurs.ID_User, utilisateurs.Username FROM utilisateurs WHERE utilisateurs.Statut = 'VIP'");
+        }
         $resultat2->execute();
         
         if (!$resultat2) 
@@ -83,20 +98,15 @@ else             // DANS QUEL CAS ?
     }
     else
     {
-        $resultatuser = $connect->prepare("SELECT * FROM utilisateurs WHERE utilisateurs.ID_User = ".$_CHOICE['IdUser']);
+        // $resultatuser = $connect->prepare("SELECT * FROM utilisateurs WHERE utilisateurs.ID_User = ".$_CHOICE['IdUser']);
+        // $resultatuser->execute();
+        // $row = $resultat2->fetch(PDO::FETCH_NUM)
+        // $_SESSION["Id_User"]=$row["Id_User"];
+        // $_SESSION["Username"]=$row["Username"];
+        // $_SESSION["Statut"]=$row["Statut"];
+        // $_SESSION["Date_abo"]=$row["Date_abo"];
     }
 }
+?>
 
-
-    ?>
-
-    <div class="selectTypeOfUser">
-        
-        </div>
-    
-        <div class="selectSpecificUser">
-    
-        </div>
-    </body>
-    
-    </html>
+</html>

@@ -10,7 +10,7 @@
 <body>
     
 <?php
-
+    session_start();
     $servername = "localhost";
     $username = "root";
     $password = "";
@@ -29,7 +29,8 @@
     }
 
     //Récupération de l'ID_User ?
-    $ID = $session['Id_User'];
+    if (isset($_SESSIO))
+    $ID = $_SESSION['Id_User'];
 
     $UserStatut = $conn->prepare("SELECT utilisateurs.Statut FROM utilisateurs WHERE utilisateurs.USER_ID = $ID");
     ?>
