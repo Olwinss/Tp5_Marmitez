@@ -21,7 +21,7 @@
         $connect = new PDO("mysql:host=$servername;dbname=$database", $username, $password);
         // set the PDO error mode to exception
         $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        echo "Connexion réussie YOUHOUUUUUUU !! ";
+        //echo "Connexion réussie YOUHOUUUUUUU !! ";
     }
     catch(PDOException $e) 
     {
@@ -31,14 +31,20 @@
     // vérifier la connexion connect_errno renvoie un numéro d'erreur , 0 si aucune erreur
 
     // On récupère tous les status disponibles dans la base (ici, Standard, VIP et Chef)
-    $resultat = $connect->prepare("SELECT DISTINCT utilisateurs.Statut, utilisateurs.Statut FROM utilisateurs WHERE utilisateurs.Statut IS NOT NULL");
-    $resultat->execute();
+    try 
+    {
+        $resultat = $connect->prepare("SELECT DISTINCT statuts.ID_Statut, statuts.Nom_Statut FROM statuts");
+        $resultat->execute();   
+    }
+    catch(PDOException $e) 
+    {
+        echo "Impossible de récupérer les statuts : " . $e->getMessage();
+    }
     if (!$resultat) 
     {
-        echo "<BR>Impossible de consulter les différents types de status" . $status . " <BR>";
+        echo "<BR>Pas de statuts trouvés" . $status . " <BR>";
         exit();
     }
-
     // La page s'appelle elle même …
     
     echo "<BR><form   action=\"index.php\"   method=\"POST\">
@@ -58,29 +64,22 @@
     }
     
 else            
-    
-    // if ($_POST['Statut']>=0) 
     {
-
-        if ($_POST['Statut']=="User")
+        try 
         {
-            $resultat2 = $connect->prepare("SELECT DISTINCT utilisateurs.ID_User, utilisateurs.Username FROM utilisateurs WHERE utilisateurs.Statut = 'User'");
+            $resultat2 = $connect->prepare("SELECT DISTINCT utilisateurs.ID_User, utilisateurs.Username FROM utilisateurs WHERE utilisateurs.Statut = ". $_POST['Statut']);
+            $resultat2->execute();
         }
-        else     if ($_POST['Statut']=="Chef")
+        catch(PDOException $e) 
         {
-            $resultat2 = $connect->prepare("SELECT DISTINCT utilisateurs.ID_User, utilisateurs.Username FROM utilisateurs WHERE utilisateurs.Statut = 'Chef'");
+            echo "Impossible de récupérer les users : " . $e->getMessage();
         }
-        else  if ($_POST['Statut']=="VIP")
-        {
-            $resultat2 = $connect->prepare("SELECT DISTINCT utilisateurs.ID_User, utilisateurs.Username FROM utilisateurs WHERE utilisateurs.Statut = 'VIP'");
-        }
-        $resultat2->execute();
-        
         if (!$resultat2) 
         {
-            echo "<BR>Impossible de consulter les différents types de status" . $status . " <BR>";
+            echo "<BR>Aucun profil correspondant" . $status . " <BR>";
             exit();
         }
+        
     
         // La page s'appelle elle même …
         
@@ -95,6 +94,7 @@ else
     }
     if (isset($_GET["IdUser"]))
     {
+        {
         $resultatuser = $connect->prepare("SELECT * FROM utilisateurs WHERE utilisateurs.ID_User = ".$_GET["IdUser"]);
         $resultatuser->execute();
         $row = $resultatuser->fetch(PDO::FETCH_NUM);
@@ -104,8 +104,23 @@ else
         $_SESSION["Username"]=$row[1];
         $_SESSION["Statut"]=$row[2];
         $_SESSION["Date_abo"]=$row[3];
+        }
 
-        echo "Vous êtes ".$_SESSION["Username"]." ayant l'id ".$_SESSION["Id_User"]. ". Vous êtes un ". $_SESSION["Statut"]. " et votre abonnement a commencé le ". $_SESSION["Date_abo"];
+        echo "Vous êtes ".$_SESSION["Username"]." ayant l'id ".$_SESSION["Id_User"]. ". Vous êtes un ";
+        {
+            try // Récupération et affichage du statut de l'utilisateur (à la place de l'id)
+            {
+                $Nomstatut = $connect->prepare("SELECT DISTINCT statuts.Nom_Statut FROM statuts WHERE statuts.ID_Statut = ".$_SESSION["Statut"]);
+                $Nomstatut->execute();
+                echo ($Nomstatut->fetch(PDO::FETCH_NUM))[0];
+            }
+            catch(PDOException $e) 
+            {
+                echo "Impossible de récupérer le statut de votre utilisateur : " . $e->getMessage();
+            }
+        }
+        
+       echo " et votre abonnement a commencé le ". $_SESSION["Date_abo"];
         echo "<br><a href=\"accueil.php\">Accéder au site</a>";
     }
 ?>

@@ -21,7 +21,6 @@
         $connect = new PDO("mysql:host=$servername;dbname=$database", $username, $password);
         // set the PDO error mode to exception
         $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        echo "Connexion réussie YOUHOUUUUUUU !! ";
     }
     catch(PDOException $e) 
     {
@@ -72,11 +71,25 @@
                         <!--INSERER LES LIGNES ICI-->
                         <?php echo "<p>Bonjour ". $_SESSION["Username"] ." !</p>"; ?>
                         <br>
-                        <?php echo "<p>Vous êtes un utilisateur : ". $_SESSION["Statut"] ."</p>"; ?> 
+                        <?php 
+                        echo "<p>Vous êtes un : ";
+                        
+                        try // Récupération et affichage du statut de l'utilisateur (à la place de l'id)
+                        {
+                            $Nomstatut = $connect->prepare("SELECT DISTINCT statuts.Nom_Statut FROM statuts WHERE statuts.ID_Statut = ".$_SESSION["Statut"]);
+                            $Nomstatut->execute();
+                            echo ($Nomstatut->fetch(PDO::FETCH_NUM))[0];
+                        }
+                        catch(PDOException $e) 
+                        {
+                            echo "Impossible de récupérer le statut de votre utilisateur : " . $e->getMessage();
+                        }
+                        ?> 
+                        </p>
                         <br>
-                        <?php echo "<p>Vous avez consulté ". $NbConsultations. " recettes</p>"; ?>
+                        <?php echo "<p>Vous avez consulté ". $NbConsultations. " recette(s)</p>"; ?>
                         <br>
-                        <?php echo "<p>Vous avez créé ". $NbRecettes ." recettes</p>";
+                        <?php echo "<p>Vous avez créé ". $NbRecettes ." recette(s)</p>";
 
                         if ($_SESSION["Statut"] == "VIP")
                         {
