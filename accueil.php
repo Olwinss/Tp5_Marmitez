@@ -105,7 +105,67 @@
                     <p>
                         <h2>News</h2>
                         <br>
-                        <!--INSERER LES LIGNES ICI-->                        
+                        <!--INSERER LES LIGNES ICI-->
+                        <?php
+                        echo "<p>Il y a ";
+                        
+                        try //Récupération du nombre de recettes
+                        {
+                            $NbRecettes = $connect->prepare("SELECT COUNT(ID_Recette) FROM recettes");
+                            $NbRecettes->execute();
+                            echo ($NbRecettes->fetch(PDO::FETCH_NUM))[0] . " recettes sur le site.</p>";
+                        }
+                        catch(PDOException $e) 
+                        {
+                            echo "Impossible de récupérer le nombre de recettes : " . $e->getMessage();
+                        }
+
+                        ?>
+                        <br>
+                        <?php
+                        echo "<p>Il y a ";
+                        
+                        try //Récupération du nombre de membres (dont VIPs et chefs)
+                        {
+                            $NbMembres = $connect->prepare("SELECT COUNT(ID_User) FROM utilisateurs WHERE ID_User > -1");
+                            $NbMembres->execute();
+                            echo ($NbMembres->fetch(PDO::FETCH_NUM))[0] . " membres, dont : ";
+
+                            $NbVIP = $connect->prepare("SELECT COUNT(ID_User) FROM utilisateurs WHERE Statut = 2");
+                            $NbVIP->execute();
+                            echo ($NbVIP->fetch(PDO::FETCH_NUM))[0] . " VIPs et ";
+
+                            $NbChefs = $connect->prepare("SELECT COUNT(ID_User) FROM utilisateurs WHERE Statut = 3");
+                            $NbChefs->execute();
+                            echo ($NbChefs->fetch(PDO::FETCH_NUM))[0] . " Chefs.</p>";
+                        }
+                        catch(PDOException $e) 
+                        {
+                            echo "Impossible de récupérer le nombre d'utilisateurs, de VIP et/ou de chefs : " . $e->getMessage();
+                        }
+
+                        ?>
+                        <br>    
+                        <?php
+                        echo "<p>Il y a eu ";
+                        
+                        try //Récupération du nombre de recettes crées le dernier mois
+                        {
+                            $NbRecLastMonth = $connect->prepare("SELECT COUNT(ID_Recette) FROM recettes WHERE MONTH(NOW()) - MONTH(Date_post) = 1");
+                            $NbRecLastMonth->execute();
+                            echo ($NbRecLastMonth->fetch(PDO::FETCH_NUM))[0] . " recettes le dernier mois.</p>";
+                        }
+                        catch(PDOException $e) 
+                        {
+                            echo "Impossible de récupérer le nombre de recettes crées le dernier mois : " . $e->getMessage();
+                        }
+
+                        ?>
+                        <br>    
+                        <p> INFO MANQUANTE </p>
+                        <!--METTRE UNE REQUETE POUR LE NOM DE LA DERNIERE RECETTE-->
+                        <br>
+
                     </p>
                 </div>
             </td>
@@ -119,6 +179,7 @@
                     <p>
                         <h2>Services</h2>
                         <!--INSERER LES LIGNES ICI-->
+                        <a href="affichage.php"> Cliquez ici pour afficher les recettes </a> 
                     </p>
                 </div>
             </td>
