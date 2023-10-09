@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste recette</title>
+</head>
+<body>
+    
 <?php
  session_start();
  $servername = "localhost";
@@ -39,8 +48,8 @@ $select = $connect->query("SELECT * FROM recettes ORDER BY recettes.Date_post DE
                 ?>
                     <li class="Affichage_recette">
     	                <div class="Model_recette">
-    			                    <div class="Titre">
-    				                    <h3><a href="recette.php?id=<?php echo $row ['ID_Recette'] ?>"><?php    echo $row ['Titre'] ?></a></h3>
+    			                    <div class="titre">
+    				                    <h3><a href="recette.php?id=<?php echo $row ['ID_Recette'] ?>"><?php    echo $row ['titre'] ?></a></h3>
                                     </div>
                                     <div class="Divers">
     				                    <p><em>Temps de réalisation : <?php echo $row['Time_realisation'] ?>    minutes</em></p>
@@ -80,8 +89,8 @@ $select = $connect->query("SELECT * FROM recettes ORDER BY recettes.Date_post DE
     ?>
             <li class="Affichage_recette">
     	        <div class="Model_recette">
-    			    <div class="Titre">
-    				    <h3><a href="recette.php?id=<?php echo $row ['ID_Recette'] ?>"><?php echo $row  ['Titre'] ?></a></h3>
+    			    <div class="titre">
+    				    <h3><a href="recette.php?id=<?php echo $row ['ID_Recette'] ?>"><?php echo $row  ['titre'] ?></a></h3>
                     </div>
                     <div class="Divers">
     				    <p><em>Temps de réalisation : <?php echo $row['Time_realisation'] ?> minutes</em></p>
@@ -115,3 +124,6 @@ $select = $connect->query("SELECT * FROM recettes ORDER BY recettes.Date_post DE
 }
 ?>
 </ul>
+
+</body>
+</html>

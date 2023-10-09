@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -162,8 +162,37 @@
 
                         ?>
                         <br>    
-                        <p> INFO MANQUANTE </p>
-                        <!--METTRE UNE REQUETE POUR LE NOM DE LA DERNIERE RECETTE-->
+                        <?php
+                        echo "<p>La dernière recette est : ";
+                        
+                        try //Récupération de la dernière recette crée
+                        {
+                            $LastRecette = $connect->prepare("SELECT titre FROM recettes ORDER BY Date_post DESC LIMIT 1");
+                            $LastRecette->execute();
+                            echo ($LastRecette->fetch(PDO::FETCH_NUM))[0] . ".</p>";
+                        }
+                        catch(PDOException $e) 
+                        {
+                            echo "Impossible de récupérer le nom de la dernière recette : " . $e->getMessage();
+                        }
+
+                        ?>
+                        <br>
+                        <?php
+                        echo "<p>Dernier abonné le : ";
+                        
+                        try //Récupération du dernier abonnement
+                        {
+                            $LastAbo = $connect->prepare("SELECT DATE_FORMAT(Date_abo,\"%a %e %M %Y\") FROM utilisateurs ORDER BY Date_abo DESC LIMIT 1");
+                            $LastAbo->execute();
+                            echo ($LastAbo->fetch(PDO::FETCH_NUM))[0] . "</p>";
+                        }
+                        catch(PDOException $e) 
+                        {
+                            echo "Impossible de récupérer la date du dernier abonnement : " . $e->getMessage();
+                        }
+
+                        ?>
                         <br>
 
                     </p>

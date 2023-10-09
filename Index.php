@@ -124,5 +124,5 @@ else
         echo "<br><a href=\"accueil.php\">Accéder au site</a>";
     }
 ?>
-
+</body>
 </html>
