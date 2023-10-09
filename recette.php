@@ -129,15 +129,18 @@
                 echo "<li>". $rowEtape["description"];
                 ?>
                 <!--<h2>Ustensiles de l'étape : </h2> -->
+                
                 <?php 
-                /*$select2 = $connect->query("SELECT DISTINCT ustensiles.Uste FROM etape_ustensile LEFT JOIN ustensiles ON etape_ustensile.id_ustensile = ustensiles.ID_Uste NATURAL JOIN etape WHERE etape.ID_Recette = " . $row["ID_Recette"]. "AND etape_ustensile.id_etape =". $rowEtape["id_etape"]);
+                $var = "SELECT DISTINCT ustensiles.Uste FROM etape_ustensile LEFT JOIN ustensiles ON etape_ustensile.id_ustensile = ustensiles.ID_Uste NATURAL JOIN etape WHERE etape.ID_Recette = " . $row["ID_Recette"]. " AND etape_ustensile.id_etape =". $rowEtape["id_etape"];
+
+                $select2 = $connect->query($var);
                 
                 
                 echo "<ul id=\"Ustensiles etape: \">";
                 foreach ($select2 as $row2) 
                 {
                     echo "<li>". $row2["Uste"];
-                }*/
+                }
                 
             }
             ?>
