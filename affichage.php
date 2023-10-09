@@ -24,8 +24,9 @@
  {
      echo "ECHEC de la connexion :( " . $e->getMessage();
  }
-$select = $connect->query("SELECT * FROM recettes ORDER BY recettes.Date_post DESC");
+ $select = $connect->query("SELECT * FROM recettes INNER JOIN utilisateurs ON recettes.ID_User = utilisateurs.ID_User ORDER BY utilisateurs.Statut DESC, recettes.Date_post DESC ");
 ?>
+<h3> Les recettes des Chefs sont affichées en premier, puis viennent les recettes des VIP, et enfin les recettes des utilisateurs standards.</h3>
 <ul id="Recettes">
     <?php
     foreach ($select as $row) 
@@ -34,16 +35,15 @@ $select = $connect->query("SELECT * FROM recettes ORDER BY recettes.Date_post DE
         {
             $resultatuser = $connect->prepare("SELECT utilisateurs.Statut FROM utilisateurs WHERE utilisateurs. ID_User = ".$row["ID_User"]);
             $resultatuser->execute();
-            $idCreator = $resultatuser->fetch(PDO::FETCH_NUM);
+            $StatusCreator = $resultatuser->fetch(PDO::FETCH_NUM);
         }
         catch(PDOException $e) 
         {
             echo "Impossible de récupérer le statut du créateur de la recette :( " . $e->getMessage();
         }        
-
-        if ($idCreator[0]==3)
+        if ($StatusCreator[0]==3)
         {
-            if ($_SESSION["Id_User"]>1) // Si c'est un user (id statut = 1)
+            if ($_SESSION["Statut"]>1) // Si c'est un user (id statut = 1)
             {
                 ?>
                     <li class="Affichage_recette">
@@ -84,7 +84,7 @@ $select = $connect->query("SELECT * FROM recettes ORDER BY recettes.Date_post DE
                     <?php
             }
         }
-        else if ($idCreator[0]!=3)
+        else if ($StatusCreator[0]!=3)
         {
     ?>
             <li class="Affichage_recette">

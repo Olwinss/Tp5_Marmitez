@@ -209,6 +209,12 @@
                         <h2>Services</h2>
                         <!--INSERER LES LIGNES ICI-->
                         <a href="affichage.php"> Cliquez ici pour afficher les recettes </a> 
+                        <?php 
+                        if ($_SESSION['Statut'] == 4)
+                        {
+                            echo "<br><a href=\"TableauDeBord.php\">Accéder au tableau de bord</a>";
+                        };
+                        ?>
                     </p>
                 </div>
             </td>

@@ -50,7 +50,7 @@
             <?php
                 try 
                 {
-                    $AuthorReq = $connect->prepare("SELECT utilisateurs.Username FROM utilisateurs WHERE utilisateurs.ID_User = " .$row    ["ID_Cult"]);
+                    $AuthorReq = $connect->prepare("SELECT utilisateurs.Username FROM utilisateurs WHERE utilisateurs.ID_User = " .$row    ["ID_User"]);
                     $AuthorReq->execute();
                     echo ($AuthorReq->fetch(PDO::FETCH_NUM))[0]. "</em></p></div> <div = \"datepublication\"> <p><em> Date de publication : ";
                     echo $row["Date_post"];
@@ -89,26 +89,30 @@
 
             <h2>Ustensiles : </h2>
             <?php 
-            $select = $connect->query("SELECT ustensiles.Uste FROM etape_ustensile NATURAL JOIN ustensiles NATURAL JOIN etape WHERE etape.ID_Recette = " . $row["ID_Recette"]);
+            $selectUstensiles = $connect->query("SELECT DISTINCT ustensiles.Uste FROM etape_ustensile LEFT JOIN ustensiles ON etape_ustensile.id_ustensile = ustensiles.ID_Uste NATURAL JOIN etape WHERE etape.ID_Recette = " . $row["ID_Recette"]);
             ?>
             <ul id="Ustensiles : ">
             <?php
-            foreach ($select as $row) 
+            foreach ($selectUstensiles as $rowUstensiles) 
             {
-                echo "<li>". $row["Uste"];
+                echo "<li>". $rowUstensiles["Uste"];
             }
 
             ?>
             </ul>
             <h2>Ingrédients : </h2>
             <?php 
-            $select = $connect->query("SELECT ingredients.Ingr FROM etape_ingredient NATURAL JOIN ingredients NATURAL JOIN etape WHERE etape.ID_Recette =" . $row["ID_Recette"]);
+            $selectIngredients = $connect->query("SELECT DISTINCT ingredients.Ingr 
+            FROM etape_ingredient 
+            LEFT JOIN ingredients ON etape_ingredient.id_ingredient = ingredients.ID_Ingr
+            NATURAL JOIN etape 
+            WHERE etape.ID_Recette =" . $row["ID_Recette"]);
             ?>
             <ul id="Ustensiles : ">
             <?php
-            foreach ($select as $row) 
+            foreach ($selectIngredients as $rowIngredients) 
             {
-                echo "<li>". $row["Ingr"];
+                echo "<li>". $rowIngredients["Ingr"];
             }
 
             ?>
@@ -116,26 +120,26 @@
             
             <h2>Étapes : </h2>
             <?php 
-            $select = $connect->query("SELECT etape.description, etape.id_etape  FROM etape WHERE etape.ID_Recette = " .$row["ID_Recette"]);
+            $selectEtapes = $connect->query("SELECT etape.description, etape.id_etape  FROM etape WHERE etape.ID_Recette = " .$row["ID_Recette"]);
             ?>
             <ul id="Etapes : ">
             <?php
-            foreach ($select as $row) 
+            foreach ($selectEtapes as $rowEtape) 
             {
-                echo "<li>". $row["description"];
+                echo "<li>". $rowEtape["description"];
                 ?>
-                <h2>Ingrédients de l'étape : </h2>
+                <!--<h2>Ustensiles de l'étape : </h2> -->
                 <?php 
-                $select2 = $connect->query("SELECT ustensiles.Uste FROM etape_ustensile NATURAL JOIN ustensiles NATURAL JOIN etape WHERE etape.ID_Recette = " . $row["ID_Recette"]. "AND etape_ustensile.id_etape =". $row["id_etape"]);
-                ?>
-                <ul id="Ustensiles etape: ">
-                <?php
+                /*$select2 = $connect->query("SELECT DISTINCT ustensiles.Uste FROM etape_ustensile LEFT JOIN ustensiles ON etape_ustensile.id_ustensile = ustensiles.ID_Uste NATURAL JOIN etape WHERE etape.ID_Recette = " . $row["ID_Recette"]. "AND etape_ustensile.id_etape =". $rowEtape["id_etape"]);
+                
+                
+                echo "<ul id=\"Ustensiles etape: \">";
                 foreach ($select2 as $row2) 
                 {
                     echo "<li>". $row2["Uste"];
-                }
+                }*/
+                
             }
-
             ?>
             </ul>
         </ul>
